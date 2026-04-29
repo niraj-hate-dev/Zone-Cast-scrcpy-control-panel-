@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Zone Cast - Screen Mirroring</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-glow: rgba(59, 130, 246, 0.5);
+  --secondary: #8b5cf6;
+  --success: #10b981;
+  --success-glow: rgba(16, 185, 129, 0.3);
+  --danger: #ef4444;
+  --danger-glow: rgba(239, 68, 68, 0.3);
+  --warning: #f59e0b;
+  --dark-1: #0a0a0f;
+  --dark-2: #12121a;
+  --dark-3: #1a1a24;
+  --dark-4: #24242e;
+  --light-1: #f3f4f6;
+  --light-2: #d1d5db;
+  --light-3: #9ca3af;
+  --border-color: rgba(59, 130, 246, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  height: 100vh;
+  background: var(--dark-1);
+  color: var(--light-1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Floating particles */
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: float 20s infinite linear;
+}
+
+@keyframes float {
+  from {
+    transform: translateY(100vh) translateX(0);
+  }
+  to {
+    transform: translateY(-100vh) translateX(100px);
+  }
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+/* LEFT PANEL */
+.left {
+  width: 380px;
+  padding: 30px;
+  background: rgba(18, 18, 26, 0.8);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.left::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--primary), transparent);
+  opacity: 0.3;
+}
+
+/* SIMPLE TEXT BRAND - NO LOGO, NO VERSION AT TOP */
+.brand {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brand-name {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff, var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.brand-tagline {
+  font-size: 13px;
+  color: var(--light-3);
+  margin-top: 5px;
+  letter-spacing: 0.5px;
+}
+
+.status-container {
+  background: rgba(26, 26, 36, 0.5);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.status-container:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+.status-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--light-3);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-label i {
+  color: var(--primary);
+  font-size: 14px;
+}
+
+#status {
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  
+}
+
+/* CARD */
+.card {
+  background: rgba(26, 26, 36, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 25px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+              inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 20px 50px rgba(59, 130, 246, 0.15);
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+/* BUTTONS */
+button {
+  flex: 1;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+button:hover::before {
+  width: 900px;
+  height: 900px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+}
+
+.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+}
+
+.danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--danger);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(239, 68, 68, 0.3);
+}
+
+/* FORM CONTROLS */
+.control-group {
+  margin-bottom: 20px;
+}
+
+.control-group:last-child {
+  margin-bottom: 0;
+}
+
+.control-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--light-2);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-label i {
+  color: var(--primary);
+  font-size: 14px;
+}
+
+select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(10, 10, 15, 0.8);
+  border: 1px solid var(--border-color);
+  color: var(--light-1);
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+select:hover {
+  border-color: var(--primary);
+  background-color: rgba(26, 26, 36, 0.9);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+select option {
+  background: var(--dark-2);
+  color: var(--light-1);
+  padding: 12px;
+}
+
+/* VERSION BADGE - Bottom left corner */
+.version-badge {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--light-3);
+  border-top: 1px solid var(--border-color);
+  background: rgba(59, 130, 246, 0.05);
+  padding: 15px 10px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.version-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.version-info i {
+  color: var(--primary);
+  font-size: 14px;
+}
+
+.version-number {
+  background: rgba(59, 130, 246, 0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  font-size: 14px;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.build-info {
+  font-size: 10px;
+  color: var(--light-3);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+/* RIGHT PANEL */
+.right {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* REMOVED LIVE CONSOLE TEXT - Only guide button remains */
+.right-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* LIVE STATS BAR */
+.live-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  background: rgba(26, 26, 36, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  justify-content: space-around;
+}
+
+.stat-block {
+  text-align: center;
+  flex: 1;
+  position: relative;
+}
+
+.stat-block:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--primary), transparent);
+  opacity: 0.3;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff, var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+
+.stat-unit {
+  font-size: 12px;
+  color: var(--light-3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--light-3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* CONSOLE - NO SCROLLBAR */
+.console-container {
+  flex: 1;
+  background: rgba(10, 10, 15, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.console-header {
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.console-header i {
+  color: var(--primary);
+  font-size: 16px;
+}
+
+.console-header span {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--light-2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.console-header .badge {
+  margin-left: auto;
+  background: rgba(59, 130, 246, 0.2);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  color: var(--primary);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* LOGS AREA - NO SCROLLBAR */
+#logs {
+  height: calc(100% - 53px);
+  padding: 15px;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow: hidden;
+  position: relative;
+}
+
+.log-entry {
+  padding: 10px 14px;
+  background: rgba(26, 26, 36, 0.5);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 10px 10px 0;
+  color: var(--light-2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.3s ease;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left-width: 3px;
+  transition: all 0.3s ease;
+  margin-bottom: 8px;
+}
+
+.log-entry:hover {
+  transform: translateX(5px);
+  background: rgba(59, 130, 246, 0.1);
+  border-left-color: var(--secondary);
+}
+
+.log-entry i {
+  font-size: 12px;
+  width: 16px;
+  color: var(--light-3);
+}
+
+.log-entry .timestamp {
+  color: var(--light-3);
+  font-size: 11px;
+  font-family: monospace;
+  min-width: 65px;
+}
+
+.log-entry .message {
+  flex: 1;
+  word-break: break-word;
+}
+
+.log-entry .status-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Log type variations */
+.log-entry.success {
+  border-left-color: var(--success);
+}
+
+.log-entry.success .status-badge {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.log-entry.warning {
+  border-left-color: var(--warning);
+}
+
+.log-entry.warning .status-badge {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.log-entry.error {
+  border-left-color: var(--danger);
+}
+
+.log-entry.error .status-badge {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* GUIDE BUTTON */
+.guide-btn {
+  background: rgba(26, 26, 36, 0.6) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--light-1) !important;
+  padding: 10px 18px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  width: auto !important;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease !important;
+}
+
+.guide-btn:hover {
+  border-color: var(--primary) !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+}
+
+.guide-btn i {
+  font-size: 14px;
+  color: var(--primary);
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  width: 450px;
+  background: rgba(26, 26, 36, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 32px;
+  padding: 30px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.modal-header h3 {
+  font-size: 22px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fff, var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-header h3 i {
+  color: var(--primary);
+  -webkit-text-fill-color: initial;
+}
+
+#closeGuide {
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--light-3);
+  transition: all 0.3s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+#closeGuide:hover {
+  color: var(--danger);
+  transform: rotate(90deg);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+}
+
+.steps li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.steps li:last-child {
+  border-bottom: none;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.step-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--light-2);
+}
+
+.step-text b {
+  color: var(--light-1);
+}
+
+.tip {
+  margin-top: 25px;
+  padding: 16px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 16px;
+  font-size: 13px;
+  color: var(--light-2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px dashed var(--primary);
+}
+
+.tip i {
+  color: var(--primary);
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+
+<!-- Floating particles for visual effect -->
+<div class="particles"></div>
+
+<div class="container">
+
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <!-- SIMPLE TEXT BRAND - NO LOGO, NO VERSION AT TOP -->
+    <div class="brand">
+      <div class="brand-name">Zone Cast</div>
+      <div class="brand-tagline">Screen Mirroring</div>
+    </div>
+
+    <div class="status-container">
+      <div class="status-label">
+        <i class="fas fa-circle"></i>
+        Device Status
+      </div>
+      <div id="status">🔴 No device</div>
+    </div>
+
+    <div class="card">
+      <div class="button-group">
+        <button id="connectBtn" class="primary" disabled>
+          <i class="fas fa-plug"></i>
+          Connect
+        </button>
+        <button id="disconnectBtn" class="danger" style="display: none;">
+          <i class="fas fa-power-off"></i>
+          Disconnect
+        </button>
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <i class="fas fa-video"></i>
+          Video Quality
+        </div>
+        <select id="bitrate">
+          <option value="2M">Low (2 Mbps)</option>
+          <option value="4M" selected>Medium (4 Mbps)</option>
+          <option value="8M">High (8 Mbps)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <i class="fas fa-tachometer-alt"></i>
+          Frame Rate
+        </div>
+        <select id="fps">
+          <option value="30">30 FPS</option>
+          <option value="60">60 FPS</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- VERSION BADGE - BOTTOM LEFT -->
+    <div class="version-badge">
+      <div class="version-info">
+        <i class="fas fa-code-branch"></i>
+        <span>Version</span>
+      </div>
+      <div class="version-number" id="version-display">v1.0.0</div>
+      <div class="build-info">© Zone Cast</div>
+    </div>
+  </div>
+  
+  <!-- RIGHT PANEL - NO LIVE CONSOLE TEXT -->
+  <div class="right">
+    <div class="right-header">
+      <button id="guideBtn" class="guide-btn">
+        <i class="fas fa-question-circle"></i>
+        Setup Guide
+      </button>
+    </div>
+
+    <!-- Live Stats -->
+    <div class="live-stats">
+      <div class="stat-block">
+        <div class="stat-value" id="live-bitrate">2</div>
+        <div class="stat-unit">MBPS</div>
+        <div class="stat-label">Bitrate</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-value" id="live-fps">60</div>
+        <div class="stat-unit">FPS</div>
+        <div class="stat-label">Frame Rate</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-value" id="live-latency">14</div>
+        <div class="stat-unit">MS</div>
+        <div class="stat-label">Latency</div>
+      </div>
+    </div>
+    
+    <!-- CONSOLE - NO SCROLLBAR -->
+    <div class="console-container">
+      <div class="console-header">
+        <i class="fas fa-terminal"></i>
+        <span>Live Event Log</span>
+        <div class="badge" id="log-counter">LIVE</div>
+      </div>
+      <div id="logs">
+        <!-- Log entries will be dynamically added here -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- GUIDE MODAL -->
+<div id="guideModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>
+        <i class="fas fa-mobile-alt"></i>
+        Connection Guide
+      </h3>
+      <span id="closeGuide">
+        <i class="fas fa-times"></i>
+      </span>
+    </div>
+
+    <ul class="steps">
+      <li>
+        <span class="step-number">1</span>
+        <span class="step-text">Enable <b>Developer Options</b> on your phone</span>
+      </li>
+      <li>
+        <span class="step-number">2</span>
+        <span class="step-text">Turn on <b>USB Debugging</b></span>
+      </li>
+      <li>
+        <span class="step-number">3</span>
+        <span class="step-text">Connect phone to PC using USB cable</span>
+      </li>
+      <li>
+        <span class="step-number">4</span>
+        <span class="step-text">Allow <b>USB debugging permission</b> on phone</span>
+      </li>
+      <li>
+        <span class="step-number">5</span>
+        <span class="step-text">Click <b>Connect</b> in Zone Cast</span>
+      </li>
+    </ul>
+
+    <div class="tip">
+      <i class="fas fa-lightbulb"></i>
+      <span>Use original cable for best stability and faster data transfer</span>
+    </div>
+  </div>
+</div>
+
+<script src="renderer.js"></script>
+<script>
+// Create floating particles for visual effect
+function createParticles() {
+  const particlesContainer = document.querySelector('.particles');
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 20 + 's';
+    particle.style.animationDuration = (15 + Math.random() * 15) + 's';
+    particle.style.opacity = Math.random() * 0.2;
+    particlesContainer.appendChild(particle);
+  }
+}
+
+// Enhanced log display function
+window.addLog = function(msg) {
+  const logBox = document.getElementById('logs');
+  if (!logBox) return;
+  
+  const timestamp = new Date();
+  const timeStr = `[${timestamp.getHours().toString().padStart(2,'0')}:${timestamp.getMinutes().toString().padStart(2,'0')}:${timestamp.getSeconds().toString().padStart(2,'0')}]`;
+  
+  // Determine log type based on message content
+  let logType = 'info';
+  let icon = 'fa-info-circle';
+  
+  if (msg.includes('✅') || msg.includes('connected') || msg.includes('ready')) {
+    logType = 'success';
+    icon = 'fa-check-circle';
+  } else if (msg.includes('⚠') || msg.includes('unauthorized') || msg.includes('Allow')) {
+    logType = 'warning';
+    icon = 'fa-exclamation-triangle';
+  } else if (msg.includes('❌') || msg.includes('Error') || msg.includes('not found')) {
+    logType = 'error';
+    icon = 'fa-times-circle';
+  }
+  
+  // Create log entry
+  const logEntry = document.createElement('div');
+  logEntry.className = `log-entry ${logType}`;
+  logEntry.innerHTML = `
+    <i class="fas ${icon}"></i>
+    <span class="timestamp">${timeStr}</span>
+    <span class="message">${msg}</span>
+    <span class="status-badge">${logType.toUpperCase()}</span>
+  `;
+  
+  // Add to log box
+  logBox.appendChild(logEntry);
+  
+  // Update counter
+  const counter = document.getElementById('log-counter');
+  if (counter) {
+    counter.textContent = `${logBox.children.length} EVENTS`;
+  }
+  
+  // Auto-remove old logs to prevent overflow (keeps last 8 logs visible)
+  while (logBox.children.length > 8) {
+    logBox.removeChild(logBox.children[0]);
+  }
+  
+  // Trigger animation
+  logBox.style.animation = 'none';
+  logBox.offsetHeight;
+  logBox.style.animation = 'fadeInOut 0.5s ease';
+};
+
+// Update live stats based on selections
+function updateLiveStats() {
+  const bitrateSelect = document.getElementById('bitrate');
+  const fpsSelect = document.getElementById('fps');
+  const liveBitrate = document.getElementById('live-bitrate');
+  const liveFps = document.getElementById('live-fps');
+  
+  if (liveBitrate && bitrateSelect) {
+    liveBitrate.textContent = bitrateSelect.value.replace('M', '');
+  }
+  
+  if (liveFps && fpsSelect) {
+    liveFps.textContent = fpsSelect.value;
+  }
+  
+  // Random latency variation for visual effect
+  const liveLatency = document.getElementById('live-latency');
+  if (liveLatency) {
+    setInterval(() => {
+      if (document.getElementById('connectBtn').disabled === false) {
+        liveLatency.textContent = Math.floor(8 + Math.random() * 15);
+      }
+    }, 2000);
+  }
+}
+
+// Update version
+function updateVersion() {
+  const versionDisplay = document.getElementById('version-display');
+  if (versionDisplay) {
+    versionDisplay.textContent = 'v1.0.0';
+  }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  createParticles();
+  updateLiveStats();
+  updateVersion();
+  
+  // Override the onLog callback if it exists
+  if (window.api && window.api.onLog) {
+    const originalOnLog = window.api.onLog;
+    window.api.onLog = function(callback) {
+      originalOnLog(function(msg) {
+        window.addLog(msg);
+        if (callback) callback(msg);
+      });
+    };
+  }
+  
+  // Update stats when selections change
+  document.getElementById('bitrate').addEventListener('change', updateLiveStats);
+  document.getElementById('fps').addEventListener('change', updateLiveStats);
+  
+  // Add initial log
+  setTimeout(() => {
+    window.addLog('✅ System initialized v1.0.0');
+    window.addLog('⏳ Waiting for device...');
+  }, 500);
+});
+</script>
+
+</body>
+</html>
