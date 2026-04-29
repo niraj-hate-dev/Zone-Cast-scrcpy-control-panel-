@@ -6,7 +6,7 @@ Zone Cast is a desktop application built using Electron.js that allows users to 
 ## 🚀 Features
 - Mirror Android screen on desktop
 - Control device using mouse & keyboard
-- Simple and lightweight UI
+- Simple and lightweight user interface
 
 ## 🛠 Tech Stack
 - Electron.js
@@ -19,20 +19,24 @@ Zone Cast is a desktop application built using Electron.js that allows users to 
 1. Clone the repository:
    git clone https://github.com/niraj-hate-dev/scrcpy-control-panel
 
-2. Install dependencies:
+2. Navigate to the project folder:
+   cd scrcpy-control-panel
+
+3. Install dependencies:
    npm install
 
-3. Run the app:
+4. Run the application:
    npm start
 
 ## 📦 Build
-To create executable:
+To create an executable file:
 npm run build
 
 ## ⚠️ Note
-scrcpy is not included in this repository. Please download it separately and configure the path.
+scrcpy is not included in this repository. Please download it separately from the official source and configure the path before running the application.
 
 ## 🎯 Future Improvements
-- Better UI design
+- Improved UI/UX design
 - Wireless device support
-- Multiple device control
+- Multi-device control
+- Performance optimization
