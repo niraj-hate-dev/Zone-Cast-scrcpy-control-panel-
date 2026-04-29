@@ -17,7 +17,7 @@ Zone Cast is a desktop application built using Electron.js that allows users to 
 ## ⚙️ Installation
 
 1. Clone the repository:
-   git clone https://github.com/niraj-hate-dev/scrcpy-control-panel
+   git clone https://github.com/niraj-hate-dev/Zone-Cast-scrcpy-control-panel-
 
 2. Navigate to the project folder:
    cd scrcpy-control-panel
